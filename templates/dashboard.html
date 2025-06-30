@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Invoice Dashboard</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; max-width: 900px; margin: 40px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1, h2 { color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #0056b3; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        a { color: #0056b3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Invoice Dashboard</h1>
+    <p><a href="{{ url_for('upload_file') }}">Upload a New Invoice</a></p>
+
+    <h2>Processed Invoices</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Original Filename</th>
+                <th>Supplier</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Uploaded At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.id }}</td>
+                <td>{{ invoice.original_filename }}</td>
+                <td>{{ invoice.supplier_name }}</td>
+                <td>{{ invoice.total_amount }}</td>
+                <td>{{ invoice.status }}</td>
+                <td>{{ invoice.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No invoices have been processed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
