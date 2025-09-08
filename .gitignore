@@ -9,3 +9,9 @@ uploads/
 
 # Environment variables
 .env
+
+# Ignore database and uploads
+instance/
+uploads/
+__pycache__/
+*.pyc
