@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Upload New Invoice</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Upload New Invoice</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+        </nav>
+    </header>
+    <main>
+        <form method=post enctype=multipart/form-data>
+          <input type=file name=invoice>
+          <input type=submit value=Upload>
+        </form>
+    </main>
+</body>
+</html>

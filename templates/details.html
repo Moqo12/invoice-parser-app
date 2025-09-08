@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Invoice #{{ invoice.id }} Details</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Details for Invoice #{{ invoice.id }}</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Xero Integration</h2>
+            {% if 'xero_token' in session %}
+                <p style="color: green;">✓ Connected to Xero</p>
+                {% if invoice.status != 'Exported' %}
+                    <a href="{{ url_for('send_to_xero', invoice_id=invoice.id) }}"><button>Send to Xero</button></a>
+                {% else %}
+                    <p>This invoice has already been sent to Xero.</p>
+                {% endif %}
+            {% else %}
+                <p>
+                    <a href="{{ url_for('xero_auth') }}">Connect to Xero</a> to send this invoice.
+                </p>
+            {% endif %}
+        </section>
+
+        <hr>
+
+        <form method="post">
+            <p>
+                <label>Supplier Name</label>
+                <input type="text" name="supplier_name" value="{{ invoice.supplier_name or '' }}">
+            </p>
+            <p>
+                <label>Invoice #</label>
+                <input type="text" name="invoice_id" value="{{ invoice.invoice_id or '' }}">
+            </p>
+            <p>
+                <label>Invoice Date (YYYY-MM-DD)</label>
+                <input type="text" name="invoice_date" value="{{ invoice.invoice_date or '' }}">
+            </p>
+            <p>
+                <label>Total Amount</label>
+                <input type="text" name="total_amount" value="{{ invoice.total_amount or '' }}">
+            </p>
+            <p>
+                <label>Status</label>
+                <select name="status">
+                    <option value="Pending Review" {% if invoice.status == 'Pending Review' %}selected{% endif %}>Pending Review</option>
+                    <option value="Approved" {% if invoice.status == 'Approved' %}selected{% endif %}>Approved</option>
+                    <option value="Exported" {% if invoice.status == 'Exported' %}selected{% endif %} disabled>Exported</option>
+                    <option value="Rejected" {% if invoice.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </p>
+            <p>
+                <button type="submit">Save Changes</button>
+            </p>
+        </form>
+
+        <hr>
+        <h3>Raw Extracted Data</h3>
+        <pre><code>{{ invoice.xero_json | tojson(indent=2) }}</code></pre>
+    </main>
+</body>
+</html>
