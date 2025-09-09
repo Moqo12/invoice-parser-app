@@ -6,12 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
   <style>
-    .primary { background: orange; border: none; }
+    body { background:#111; color:#eee; }
+    h1,h2 { color:#fff; }
     .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
-    .right { text-align: right; }
-    .muted { opacity:.8; }
-    table td, table th { vertical-align: middle; }
     .filebox { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+    table th, table td { vertical-align: middle; }
+    .right { text-align:right; }
+    .muted { opacity:.8; }
+    .btn { background:orange; color:#111; border:none; padding:.35rem .6rem; cursor:pointer; }
+    .btn:hover { filter:brightness(0.95); }
+    .btn-ghost { background:transparent; border:1px solid #444; color:#ddd; }
+    .btn-danger { background:#e74c3c; color:#fff; border:none; }
+    .btn-danger:hover { background:#c0392b; }
+    .inline-form { display:inline; margin:0; padding:0; }
   </style>
 </head>
 <body>
@@ -25,10 +32,10 @@
       <h2>Upload Invoice</h2>
       <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="filebox">
         <input type="file" name="file" accept="application/pdf" required />
-        <button type="submit" class="primary">Upload</button>
+        <button type="submit" class="btn">Upload</button>
       </form>
 
-      {% with messages = get_flashed_messages() %}
+      {% with messages = get_flashed_messages(with_categories=false) %}
         {% if messages %}
           <ul>
             {% for m in messages %}
@@ -54,7 +61,7 @@
               <th>Date</th>
               <th class="right">Amount</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th style="min-width:220px;">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -70,9 +77,15 @@
               <td>{{ inv.status or "—" }}</td>
               <td>
                 <div class="toolbar">
-                  <a href="{{ url_for('invoice_detail', invoice_id=inv.id) }}"><button class="primary">Open</button></a>
-                  <a href="{{ url_for('download_invoice_json', invoice_id=inv.id) }}"><button>JSON</button></a>
-                  <a href="{{ url_for('download_invoice_csv',  invoice_id=inv.id) }}"><button>CSV</button></a>
+                  <a href="{{ url_for('invoice_detail', invoice_id=inv.id) }}"><button class="btn">Open</button></a>
+                  <a href="{{ url_for('download_invoice_json', invoice_id=inv.id) }}"><button class="btn btn-ghost">JSON</button></a>
+                  <a href="{{ url_for('download_invoice_csv',  invoice_id=inv.id) }}"><button class="btn btn-ghost">CSV</button></a>
+
+                  <!-- Delete (POST) -->
+                  <form action="{{ url_for('delete_invoice', invoice_id=inv.id) }}" method="post" class="inline-form"
+                        onsubmit="return confirm('Delete invoice #{{ inv.id }}? This cannot be undone.');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
                 </div>
               </td>
             </tr>

@@ -1,30 +1,53 @@
-# Invoice Parser Application
+# Invoice Parser App (Flask + Google Document AI)
 
-This is a simple web application built with Python and Flask that uses Google Cloud Document AI to automatically parse and extract key information from PDF invoices.
+Upload a PDF invoice → extract structured fields (supplier, invoice #, date, totals) → review & edit → export JSON/CSV.
+
+🔗 **Live Repo:** [github.com/Moqo12/invoice-parser-app](https://github.com/Moqo12/invoice-parser-app)
+
+---
+
+## Screenshots
+
+### Dashboard
+Shows uploaded invoices with quick actions (Open, JSON, CSV, Delete).  
+![Dashboard](docs/dashboard.png)
+
+### Invoice Details
+Review, edit, and export structured invoice data.  
+![Details](docs/details.png)
+
+---
+
+## Why this project
+
+- Shows end-to-end delivery: backend, data extraction, cleaning, and a usable UI.
+- Integrates a cloud AI API (Google Document AI) with a Flask app.
+- Normalizes messy OCR data (e.g., trims supplier punctuation, ISO-dates).
+
+---
 
 ## Features
--   **File Upload:** Upload PDF invoices through a web interface.
--   **Data Extraction:** Uses Google's pre-trained Invoice Parser model to extract fields like supplier name, invoice ID, date, total amount, tax, and currency.
--   **Dashboard View:** Displays all processed invoices in a clean, simple dashboard.
--   **Data Export:** Export all captured invoice data to a CSV file.
+
+- 📤 PDF upload
+- 🤖 Google Document AI Invoice Parser integration
+- 🧹 Cleaning & normalization (supplier name, date, amount)
+- ✏️ Edit & review screen
+- 📑 Export to JSON/CSV
+- 🗄 SQLite persistence
+- 🗑 Safe delete button for cleanup
+
+---
 
 ## Tech Stack
--   **Backend:** Python, Flask
--   **Database:** SQLAlchemy
--   **AI / OCR:** Google Cloud Document AI API
--   **Version Control:** Git & GitHub
 
-## Setup and Installation
+**Python, Flask, SQLAlchemy, Google Cloud Document AI, HTML/CSS/JS**
 
-Follow these steps to get the application running locally.
+---
 
-### 1. Prerequisites
--   Python 3.8+
--   Git
--   A Google Cloud Platform (GCP) project with the Document AI API enabled.
--   A GCP service account key with permissions to access the Document AI API.
+## Setup Instructions
 
-### 2. Clone the Repository
+Clone the repo:
+
 ```bash
-git clone [https://github.com/Moqo12/invoice-parser-app.git](https://github.com/Moqo12/invoice-parser-app.git)
+git clone https://github.com/Moqo12/invoice-parser-app.git
 cd invoice-parser-app

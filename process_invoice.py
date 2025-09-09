@@ -1,12 +1,12 @@
 # process_invoice.py
+import os
 from datetime import datetime
 import re
 
-# --- Your variables (env overrides optional; keep simple here) ---
-PROJECT_ID = "invoice-processor-mvp"
-LOCATION = "eu"
-PROCESSOR_ID = "76b22179c654ba14"
-MIME_TYPE = "application/pdf"
+PROJECT_ID   = os.environ.get("PROJECT_ID")
+LOCATION     = os.environ.get("LOCATION", "eu")
+PROCESSOR_ID = os.environ.get("PROCESSOR_ID")
+MIME_TYPE    = os.environ.get("MIME_TYPE", "application/pdf")
 
 def _clean_supplier(name: str) -> str:
     return (name or "").strip().rstrip(",;:·")
