@@ -1,17 +1,24 @@
-# Python cache
+# Python cache / bytecode
 __pycache__/
+*.py[cod]
+*$py.class
 
-# Database file
-database.db
+# Virtual environments
+.venv/
+env/
+venv/
 
-# User uploaded files
-uploads/
-
-# Environment variables
+# Local config / secrets
 .env
+*.json          # e.g. service account keys (DO NOT COMMIT REAL KEYS)
 
-# Ignore database and uploads
+# Databases
+*.db
 instance/
+
+# User uploads
 uploads/
-__pycache__/
-*.pyc
+
+# OS cruft
+.DS_Store
+Thumbs.db
