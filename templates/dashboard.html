@@ -1,48 +1,88 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Invoice Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <meta charset="utf-8" />
+  <title>Invoice Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+  <style>
+    .primary { background: orange; border: none; }
+    .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+    .right { text-align: right; }
+    .muted { opacity:.8; }
+    table td, table th { vertical-align: middle; }
+    .filebox { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Invoice Dashboard</h1>
-        <nav>
-            <a href="{{ url_for('upload_file') }}">Upload New Invoice</a>
-        </nav>
-    </header>
-    <main>
+  <header>
+    <h1>Invoice Dashboard</h1>
+  </header>
+
+  <main>
+    <!-- Upload -->
+    <section>
+      <h2>Upload Invoice</h2>
+      <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="filebox">
+        <input type="file" name="file" accept="application/pdf" required />
+        <button type="submit" class="primary">Upload</button>
+      </form>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul>
+            {% for m in messages %}
+              <li class="muted">{{ m }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </section>
+
+    <!-- List -->
+    <section>
+      <h2>Invoices</h2>
+
+      {% if invoices and invoices|length > 0 %}
+        <div class="muted">Total: {{ invoices|length }}</div>
         <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Supplier</th>
-                    <th>Invoice #</th>
-                    <th>Total</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Uploaded</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for invoice in invoices %}
-                <tr>
-                    <td><a href="{{ url_for('invoice_detail', invoice_id=invoice.id) }}">{{ invoice.id }}</a></td>
-                    <td>{{ invoice.supplier_name }}</td>
-                    <td>{{ invoice.invoice_id }}</td>
-                    <td>{{ "%.2f"|format(invoice.total_amount) if invoice.total_amount is not none }}</td>
-                    <td>{{ invoice.invoice_date }}</td>
-                    <td><mark>{{ invoice.status }}</mark></td>
-                    <td>{{ invoice.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7">No invoices have been uploaded yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Supplier</th>
+              <th>Invoice #</th>
+              <th>Date</th>
+              <th class="right">Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for inv in invoices %}
+            <tr>
+              <td>#{{ inv.id }}</td>
+              <td>{{ inv.supplier_name or "—" }}</td>
+              <td>{{ inv.invoice_id or "—" }}</td>
+              <td>{{ inv.invoice_date or "—" }}</td>
+              <td class="right">
+                {% if inv.total_amount is not none %}{{ "%.2f"|format(inv.total_amount) }}{% else %}—{% endif %}
+              </td>
+              <td>{{ inv.status or "—" }}</td>
+              <td>
+                <div class="toolbar">
+                  <a href="{{ url_for('invoice_detail', invoice_id=inv.id) }}"><button class="primary">Open</button></a>
+                  <a href="{{ url_for('download_invoice_json', invoice_id=inv.id) }}"><button>JSON</button></a>
+                  <a href="{{ url_for('download_invoice_csv',  invoice_id=inv.id) }}"><button>CSV</button></a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
         </table>
-    </main>
+      {% else %}
+        <p class="muted">No invoices yet. Upload a PDF to get started.</p>
+      {% endif %}
+    </section>
+  </main>
 </body>
 </html>
